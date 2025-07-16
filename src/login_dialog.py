@@ -51,8 +51,8 @@ class LoginDialog(ComponentDialog):
         # Get the token from the previous step. Note that we could also have gotten the
         # token directly from the prompt itself. There is an example of this in the next method.
         if step_context.result:
-            await step_context.context.send_activity("You are now logged in.")
-            await step_context.context.send_activity("Please proceed to speak with your data.")
+            # await step_context.context.send_activity("You are now logged in.")
+            # await step_context.context.send_activity("Please proceed to speak with your data.")
             return await step_context.end_dialog(step_context.result.token)
 
         await step_context.context.send_activity(

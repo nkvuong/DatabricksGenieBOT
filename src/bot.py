@@ -76,13 +76,12 @@ class MyBot(ActivityHandler):
                 await self._trigger_login_dialog(turn_context)
                 return await self._initialize_genie_querier_with_token(turn_context)
         
-        # Check if user is authenticated
-        if not await self._is_user_authenticated(turn_context):
-            logger.info("User not authenticated, triggering login dialog")
-            return await self._trigger_login_dialog(turn_context)
+        # Trigger login - in case token has timed out. 
+        if self.auth_method == 'oauth':
+            await self._trigger_login_dialog(turn_context)
 
          # Check if genie has been initialized
-        elif "logout" in question.lower():
+        if "logout" in question.lower():
             await turn_context.send_activity("Logging you out.")
             self.genie_querier = GenieQuerier() # reset the genie querier
             return await turn_context.adapter.sign_out_user(turn_context, OAUTH_CONNECTION_NAME, None)            
@@ -178,6 +177,7 @@ class MyBot(ActivityHandler):
             turn_context,
             self.conversation_state.create_property("DialogState"),
         )
+        return await turn_context.send_activity("(TokenResponse) Successfully logged in")
 
     # Handle teams signin/verifyState invoke activity
     async def on_teams_signin_verify_state(self, turn_context: TurnContext):
@@ -190,7 +190,8 @@ class MyBot(ActivityHandler):
         )
         
         # After successful authentication, try to get the token and initialize genie querier
-        return await self._initialize_genie_querier_with_token(turn_context)
+        await self._initialize_genie_querier_with_token(turn_context)
+        return await turn_context.send_activity("(TeamsVerifyState) Successfully logged in")
     
     # on_invoke_activity does not handle signin/verifyState, so we need to handle it here
     async def on_invoke_activity(self, turn_context: TurnContext):
