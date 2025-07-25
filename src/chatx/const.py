@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -19,10 +20,12 @@ OAUTH_CONNECTION_NAME = os.getenv("OAUTH_CONNECTION_NAME", "")
 WELCOME_MESSAGE = "Welcome to the Data Query Bot!"
 WAITING_MESSAGE = "Querying Genie for results..."
 SWITCHING_MESSAGE = "switch to @"
-AUTH_METHOD = "oauth" # can also be "service_principal"
+AUTH_METHOD = "oauth"  # can also be "service_principal"
 
 # Spaces mapping in json file
-with open("../spaces.json") as f:
+__dir = Path(__file__).parent
+
+with open(f"{__dir}/spaces.json") as f:
     SPACES = json.load(f)
 REVERSE_SPACES = {v: k for k, v in SPACES.items()}
 LIST_SPACES = ", ".join([f"@{space_name}" for space_name in SPACES.keys()])

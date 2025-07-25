@@ -5,13 +5,11 @@ from botbuilder.dialogs import DialogTurnResult, ComponentDialog, DialogContext
 from botbuilder.core import BotFrameworkAdapter
 from botbuilder.schema import ActivityTypes
 
-from botbuilder.core import MessageFactory
 from botbuilder.dialogs import (
     WaterfallDialog,
     WaterfallStepContext,
-    DialogTurnResult,
 )
-from botbuilder.dialogs.prompts import OAuthPrompt, OAuthPromptSettings, ConfirmPrompt
+from botbuilder.dialogs.prompts import OAuthPrompt, OAuthPromptSettings
 
 
 class LoginDialog(ComponentDialog):
@@ -35,10 +33,7 @@ class LoginDialog(ComponentDialog):
         self.add_dialog(
             WaterfallDialog(
                 "WFDialog",
-                [
-                    self.prompt_step,
-                    self.login_step
-                ],
+                [self.prompt_step, self.login_step],
             )
         )
 
@@ -58,7 +53,9 @@ class LoginDialog(ComponentDialog):
         )
         return await step_context.begin_dialog(OAuthPrompt.__name__)
 
-    async def on_begin_dialog(self, inner_dc: DialogContext, options: object) -> DialogTurnResult:
+    async def on_begin_dialog(
+        self, inner_dc: DialogContext, options: object
+    ) -> DialogTurnResult:
         result = await self._interrupt(inner_dc)
         if result:
             return result

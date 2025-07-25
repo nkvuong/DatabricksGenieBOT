@@ -24,6 +24,14 @@ install: uv ## Install dependencies
 lint:  ## Run linters
 	uv run ruff check ./src ./tests
 
+.PHONY: test
+test: uv ## Run tests
+	uv run pytest
+
+.PHONY: coverage
+coverage: uv ## Run tests with coverage
+	uv run pytest --cov=chatx
+
 .PHONY: fix
 fix:  ## Fix lint errors
 	uv run ruff check ./src ./tests --fix

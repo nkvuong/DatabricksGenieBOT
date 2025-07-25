@@ -3,8 +3,8 @@ import logging
 
 from databricks.sdk import GenieAPI, WorkspaceClient
 
-from const import DATABRICKS_HOST, DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET
-from genie_result import GenieResult
+from chatx.const import DATABRICKS_HOST, DATABRICKS_CLIENT_ID, DATABRICKS_CLIENT_SECRET
+from chatx.genie_result import GenieResult
 
 # Log
 logger = logging.getLogger(__name__)
@@ -17,9 +17,7 @@ class GenieQuerier:
     def __init__(self, token: str | None = None):
         # If token is provided, use it to authenticate
         if token is not None:
-            workspace_client = WorkspaceClient(
-                host=DATABRICKS_HOST,
-                token=token)
+            workspace_client = WorkspaceClient(host=DATABRICKS_HOST, token=token)
             self.genie_api = GenieAPI(workspace_client.api_client)
             self.auth_method = "oauth"
         elif DATABRICKS_CLIENT_ID and DATABRICKS_CLIENT_SECRET:
@@ -34,7 +32,6 @@ class GenieQuerier:
         else:
             self.genie_api = None
             self.auth_method = None
-        
 
     async def ask_genie(
         self, question: str, space_id: str, conversation_id: str | None

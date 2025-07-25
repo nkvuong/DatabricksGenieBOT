@@ -13,7 +13,12 @@ dependencies = [
     "botbuilder-dialogs"
 ]
 
+[tool.uv]
+package = true
+
 [dependency-groups]
 dev = [
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
     "ruff>=0.11.11",
 ]
